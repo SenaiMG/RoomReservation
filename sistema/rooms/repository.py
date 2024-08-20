@@ -1,5 +1,4 @@
 from rooms.models import Room
-from django.db.models import Q
 
 class RoomRepository:
     @staticmethod
@@ -41,12 +40,14 @@ class RoomRepository:
     
     @staticmethod
     def search_rooms(query):
-        """Busca salas por ID, nome."""
+        """Busca salas por ID ou nome, convertendo o nome para maiúsculas."""
         try:
-            # Tentando buscar por ID
-            return Room.objects.filter(id=query)
+            # Primeiro tenta buscar por ID
+            if query.isdigit():
+                return Room.objects.filter(id=query)
         except ValueError:
-            # Se não for um ID válido, busca por nome 
-            return Room.objects.filter(
-                Q(name__icontains=query)
-            )
+            pass
+        
+        # Se não for um ID válido, busca por nome (convertendo para maiúsculas)
+        query_upper = query.upper()
+        return Room.objects.filter(name__icontains=query_upper)

@@ -145,12 +145,18 @@ get_random_secret_key; print(get_random_secret_key())"
 ## Usuários de testes
 Os dados são referentes ao arquivo user.json dapasta fixtures
 
-- Nome: Docente
-- Senha: Sesi@1234
+- Nome: Usuario Docente
+- Senha: Senai@1234
 - Tipo: Professor
-- Email: docentesenai1234@gmail.com
+- Email: docentesenai@gmail.com
 ---
-- Nome: Gestor
-- Senha: Sesi@1234
+- Nome: Usuario Gestor
+- Senha: Senai@1234
 - Tipo: Gestor
-- Email: gestorsenai1234@gmail.com
+- Email: gestorsenai@gmail.com
+
+## Realização de testes do sistema
+Exemplo se quiser executar apenas um teste
+```bash
+python .\manage.py test reservations.tests.test_repository
+```

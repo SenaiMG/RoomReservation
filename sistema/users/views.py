@@ -44,8 +44,14 @@ class UserListView(ListView):
     paginate_by = 10
 
     def get_queryset(self):
+        search_query = self.request.GET.get('search', '')
         page = self.request.GET.get('page', 1)
-        users = UserService.list_all_users(page=page, per_page=self.paginate_by)
+        
+        if search_query:
+            users = UserService.search_users(search_query, page=page, per_page=self.paginate_by)
+        else:
+            users = UserService.list_all_users(page=page, per_page=self.paginate_by)
+        
         return users
 
 
@@ -115,9 +121,25 @@ class DashboardTeacherPage(View):
         return render(request, self.template_name)
 
 
+@method_decorator(user_is_manager_or_teacher, name='dispatch')
+class UserProfileView(View):
+    template_name = 'users/profile.html'
 
-def profile(request):
-    return render(request, 'users/profile.html')
+    def get(self, request):
+        form = ProfileForm(instance=request.user)
+        return render(request, self.template_name, {'form': form})
+
+    def post(self, request):
+        form = ProfileForm(request.POST, instance=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Perfil atualizado com sucesso!")
+            return redirect('profile')
+        else:
+            messages.error(request, "Ocorreu um erro ao atualizar o perfil.")
+            return render(request, self.template_name, {'form': form})
+    
+
 
 
 

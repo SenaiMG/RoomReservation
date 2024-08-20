@@ -49,6 +49,16 @@ class RoomService:
         return RoomRepository.get_all_rooms()
     
     @staticmethod
-    def search_rooms(query):
-        """Realiza a busca de salas."""
-        return RoomRepository.search_rooms(query)
+    def search_rooms(query, page=1, per_page=10):
+        """Realiza a busca de salas com paginação."""
+        rooms = RoomRepository.search_rooms(query)
+        paginator = Paginator(rooms, per_page)
+
+        try:
+            paginated_rooms = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_rooms = paginator.page(1)
+        except EmptyPage:
+            paginated_rooms = paginator.page(paginator.num_pages)
+
+        return paginated_rooms

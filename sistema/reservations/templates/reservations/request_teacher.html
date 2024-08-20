@@ -23,6 +23,18 @@
       <div class="header position-relative mt-3 mb-5">
           <h1 class="position-absolute top-0 start-50 translate-middle-x" style="font-family: Modestic;">Solicitações </h1>
       </div>
+      <div class="d-flex justify-content-center">
+        <div style="width: 50%; ">
+            <form class="d-flex" method="get" action="{% url 'requests' %}" role="search">
+                <input class="form-control me-2" type="search" name="search" value="{{ search_query }}" placeholder="Pesquisar" aria-label="Search">
+                <button style="border-color: #045CAC; background-color: #045CAC;" class="btn btn-green btn-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-search" viewBox="0 0 16 18">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                </button>
+            </form>
+        </div>  
+    </div>
       <div class="container mt-4">
               <div class="row align-items-center">
                   {% for reserva in reservas %}
@@ -43,28 +55,33 @@
                           {% else %}
                             <span class="badge text-bg-warning">Pendente</span>
                           {% endif %}
+                          {% if reserva.status == "pending" %}
+                          <hr>
+                          <p class="f text-start mb-1" style="font-size: 12px; color: dimgray;">Ação:
+                            <form method="POST" action="{% url 'request_user_cancel' %}">
+                              {% csrf_token %}
+                              <input type="hidden" name="reservation_id" value="{{ reserva.id }}">
+                              <button type="submit" class="btn btn-danger">Cancelar</button>
+                            </form>
+                          </p>
+                          {% endif %}
                         </div>
                       </div>
                   </div>
                   {% endfor %}
-                  <div class="pagination">
-                    <span class="step-links">
+                  <nav aria-label="Page navigation example">
+                    <ul class="pagination d-flex justify-content-center">
                         {% if reservas.has_previous %}
-                            <a href="?page=1">&laquo; primeira</a>
-                            <a href="?page={{ reservas.previous_page_number }}">anterior</a>
+                            <li class="page-item"><a class="page-link" href="?page={{ reservas.previous_page_number }}">Anterior</a></li>
+                            <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
                         {% endif %}
-            
-                        <span class="current">
-                            Página {{ reservas.number }} de {{ reservas.paginator.num_pages }}.
-                        </span>
-            
+                        <li class="page-item active"><a class="page-link" href="#">{{ reservas.number }}</a></li>
                         {% if reservas.has_next %}
-                            <a href="?page={{ reservas.next_page_number }}">próxima</a>
-                            <a href="?page={{ reservas.paginator.num_pages }}">última &raquo;</a>
+                            <li class="page-item"><a class="page-link" href="?page={{ reservas.paginator.num_pages }}">{{ reservas.paginator.num_pages }}</a></li>
+                            <li class="page-item"><a class="page-link" href="?page={{ reservas.next_page_number }}">Próxima</a></li>
                         {% endif %}
-                    </span>
-                </div>
-              </div>   
+                    </ul>
+                </nav>
       </div>
   </section>
 {% endblock %}

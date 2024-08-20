@@ -5,27 +5,35 @@
         <!-- Perfil -->
         <div class="py-5">
             <h1 class="text-center" style="font-family: Modestic;">MEU PERFIL</h1>
-            <div class="container">
-                <div class="py-3">
-                    <h4>E-mail: flavio@gmail.com</h4>
-                </div>
-                <div class="py-3 row">
-                    <div class="col">
-                        <h4>Nome de Usuário: Flavio Junior</h4>
+            <div class="container mt-5">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="card mb-4">
+                            <div class="text-center py-4">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="blue" class="bi bi-person-circle" viewBox="0 0 16 16">
+                                    <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                                    <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                                </svg>
+                            </div>
+                            <div class="card-body text-center">
+                                <h5 class="my-3">{{user.first_name}}</h5>
+                                <p class="text-muted mb-1">{{user.get_user_type_display }}</p>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col" style="text-align: end;">
-                        <button type="button" class="btn btn-primary">Editar</button>
-                    </div>    
-                </div>
-                <div class="py-3 row">
-                    <div class="col">
-                        <h4>Senha: *********</h4>
+                    <div class="col-lg-8">
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <form method="post">
+                                    {% csrf_token %}
+                                    {{ form.as_p }}
+                                    <button type="submit" class="btn btn-primary">Salvar Alterações</button>
+                                  </form>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col" style="text-align: end;">
-                        <button type="button" class="btn btn-primary">Trocar</button>      
-                    </div>  
                 </div>
-            </div>
+            </div>        
         </div>
     </section>
 {% endblock %}

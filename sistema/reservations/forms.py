@@ -7,14 +7,13 @@ class HourForm(forms.ModelForm):
         model = Hour
         fields = ['range_hour']
         labels = {
-            'range_hour': 'horario',
+            'range_hour': 'Siga o exemplo de horário:',
         }
         widgets = {
             'range_hour': forms.TextInput(
                 attrs={
                     'class': 'form-control',
-                    'placeholder': "Horario",
+                    'placeholder': "Ex: 07:01 - 08:00",
                 }
             ),
         }
-

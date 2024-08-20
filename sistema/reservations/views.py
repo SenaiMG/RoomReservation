@@ -38,12 +38,34 @@ class CalendarReservation(View):
 
 @method_decorator(user_is_teacher, name='dispatch')
 class ListReservation(View):
-    
+
     def get(self, request, *args, **kwargs):
-        reservas = ReservationService.get_user_reservations(request.user,request.GET.get('page', 1),20)
-        
-        return render(request, 'reservations/request_teacher.html', {'reservas': reservas})
-    
+        search_query = request.GET.get('search', '')
+        page = request.GET.get('page', 1)
+
+        if search_query:
+            # Se houver uma busca, filtra os resultados para o usuário logado
+            reservas = ReservationService.search_user_reservations(request.user.id, search_query, page=page, per_page=20)
+        else:
+            # Se não houver busca, retorna todas as reservas do usuário com paginação
+            reservas = ReservationService.get_user_reservations(request.user.id, page=page, per_page=20)
+
+        return render(request, 'reservations/request_teacher.html', {'reservas': reservas, 'search_query': search_query})
+
+    def post(self, request, *args, **kwargs):
+        reservation_id = request.POST.get('reservation_id')
+        if reservation_id:
+            # Apenas o usuário logado pode cancelar suas próprias reservas
+            reservation = ReservationService.get_reservation_details(reservation_id)
+            if reservation and reservation.teacher == request.user and reservation.status == 'pending':
+                ReservationService.delete_reservation(reservation_id)
+                messages.success(request, "Reserva cancelada com sucesso!")
+            else:
+                messages.error(request, "Não foi possível cancelar a reserva.")
+        else:
+            messages.error(request, "ID da reserva não encontrado. Por favor, tente novamente.")
+
+        return redirect(request.path_info)
 
 @method_decorator(user_is_manager, name='dispatch')
 class ListReservationPending(View):
@@ -119,10 +141,42 @@ class DashboardRequestPageView(View):
 class ListReservationManager(View):
     template_name = 'reservations/request_total.html'
 
+    #def get(self, request):
+    #    reservas = ReservationService.list_reservations_with_approvals(request.GET.get('page', 1),20)
+    #    
+    #    return render(request, self.template_name, {'reservas': reservas})
+    
     def get(self, request):
-        reservas = ReservationService.list_reservations_with_approvals(request.GET.get('page', 1),20)
-        
-        return render(request, self.template_name, {'reservas': reservas})
+        search_query = request.GET.get('search', '')
+        page = request.GET.get('page', 1)
+
+        if search_query:
+            # Se houver uma busca, filtra os resultados
+            reservas = ReservationService.search_reservations(search_query, page=page, per_page=20)
+        else:
+            # Se não houver busca, retorna todas as reservas com paginação
+            reservas = ReservationService.list_reservations_with_approvals(page=page, per_page=20)
+
+        return render(request, self.template_name, {'reservas': reservas, 'search_query': search_query})
+
+    def post(self, request):
+        reservation_id = request.POST.get('reservation_id')
+        if reservation_id:
+            manager = request.user  # Assumindo que o usuário logado é o manager
+            result = ReservationService.cancel_reservation(reservation_id, manager)
+            
+            if isinstance(result, dict) and 'error' in result:
+                # Adiciona uma mensagem de erro se algo deu errado
+                messages.error(request, result['error'])
+            else:
+                # Adiciona uma mensagem de sucesso se a reserva foi cancelada com sucesso
+                messages.success(request, "Reserva cancelada com sucesso.")
+        else:
+            # Caso o reservation_id não seja encontrado no POST
+            messages.error(request, "ID da reserva não encontrado. Por favor, tente novamente.")
+
+        # Redireciona de volta para a página atual
+        return redirect(request.path_info)
 
 
 
@@ -131,11 +185,17 @@ class HourListView(View):
     paginate_by = 10  
 
     def get(self, request, *args, **kwargs):
+        search_query = request.GET.get('search', '')
         page = request.GET.get('page', 1)
         per_page = self.paginate_by
-        hours = HourService.list_all_hours(page=page, per_page=per_page)
+
+        if search_query:
+            hours = HourService.search_hours(search_query, page=page, per_page=per_page)
+        else:
+            hours = HourService.list_all_hours(page=page, per_page=per_page)
+
         form = HourForm()
-        return render(request, self.template_name, {'hours': hours, 'form': form})
+        return render(request, self.template_name, {'hours': hours, 'form': form, 'search_query': search_query})
 
 class HourCreateView(View):
     def post(self, request, *args, **kwargs):

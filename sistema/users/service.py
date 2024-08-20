@@ -33,9 +33,20 @@ class UserService:
             return None
 
     @staticmethod
-    def create_new_user(**kwargs):
-        """Cria um novo usuário."""
-        return UserRepository.create_user(**kwargs)
+    def create_new_user(first_name, email, password, user_type):
+        """
+        Cria um novo usuário com `first_name` salvo no campo correto e gera um `username`.
+        """
+        username = first_name.replace(' ', '_').lower()
+        user = UserRepository.create_user(
+            first_name=first_name.capitalize(),
+            username=username,
+            email=email,
+            user_type=user_type
+        )
+        user.set_password(password)
+        user.save()
+        return user
 
     @staticmethod
     def update_existing_user(user_id, **kwargs):
@@ -51,3 +62,26 @@ class UserService:
     def get_all_users():
         """Retorna todos os usuários."""
         return UserRepository.get_all_users()
+    
+
+    @staticmethod
+    def search_users(search_query, page=1, per_page=10):
+        """
+        Busca usuários pelo first_name ou email e realiza a paginação dos resultados.
+
+        :param search_query: Termo de busca inserido pelo usuário.
+        :param page: Número da página atual.
+        :param per_page: Quantidade de itens por página.
+        :return: Página atual com os usuários e informações de paginação.
+        """
+        users = UserRepository.search_users(search_query)
+        paginator = Paginator(users, per_page)
+
+        try:
+            paginated_users = paginator.page(page)
+        except PageNotAnInteger:
+            paginated_users = paginator.page(1)
+        except EmptyPage:
+            paginated_users = paginator.page(paginator.num_pages)
+
+        return paginated_users

@@ -81,7 +81,8 @@ async function date_click(date, element) {
     
     // Chamar a API para obter os dados das horas disponíveis
     try {
-        const response = await fetch(`http://127.0.0.1:8000/api/check-availability/${room}/${date.toISOString().split('T')[0]}/`, {
+        const baseURL = window.location.origin;
+        const response = await fetch(`${baseURL}/api/check-availability/${room}/${date.toISOString().split('T')[0]}/`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -244,10 +245,11 @@ function mostardiv() {
 function mostardivprof() {
     var div = document.getElementById("prof");
     div.style.visibility = "visible";
-
     var selectProf = document.getElementById('list_teacher');
     var ProfValue = selectProf.value;
-
     var hiddenProf = document.getElementById('teacher');
     hiddenProf.value = ProfValue;
 }
+
+document.getElementById('list_teacher').addEventListener('change', mostardivprof);
+document.getElementById('list_room').addEventListener('change', mostardiv);

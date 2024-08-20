@@ -3437,8 +3437,7 @@ input[type="button"].btn-block {
   align-items: center;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
-  justify-content: space-between;
-  padding: 0.5rem 1rem; }
+  justify-content: space-between; }
   .navbar > .container,
   .navbar > .container-fluid {
     display: -webkit-box;
@@ -8326,15 +8325,17 @@ h1, h2, h3, h4, h5,
   border: none;
   background: #7e0cf5; }
   .button.button-white {
-    background: #fff;
-    color: #000; }
+    background: #0056b3;
+    color: #fff; }
   .button:focus {
     -webkit-box-shadow: none;
     box-shadow: none;
     outline: none; }
 
 #cancel-button {
-  background: #0056b3; }
+  background: #fff;
+  color: #000;
+}
 
 #add-button {
   display: block;

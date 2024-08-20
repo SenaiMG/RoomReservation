@@ -12,11 +12,17 @@ class RoomListView(View):
     paginate_by = 10  
 
     def get(self, request, *args, **kwargs):
+        search_query = request.GET.get('search', '')
         page = request.GET.get('page', 1)
         per_page = self.paginate_by
-        rooms = RoomService.list_all_rooms(page=page, per_page=per_page)
+        
+        if search_query:
+            rooms = RoomService.search_rooms(search_query, page=page, per_page=per_page)
+        else:
+            rooms = RoomService.list_all_rooms(page=page, per_page=per_page)
+        
         form = RoomsForm()
-        return render(request, self.template_name, {'rooms': rooms, 'form': form})
+        return render(request, self.template_name, {'rooms': rooms, 'form': form, 'search_query': search_query})
 
 class RoomCreateView(View):
     def post(self, request, *args, **kwargs):

@@ -12,6 +12,10 @@
           padding: 15px;
           text-align: center;
       }
+      .btn-green{
+        background-color: #045CAC;
+        
+      }
       @font-face {
         font-family: Modestic;
         src: url("{% static 'assets/fonts/modestic_sans/ModesticSans-Bold.ttf' %}") format(truetype);
@@ -23,23 +27,24 @@
   <section class="py-5">
       <div class="header position-relative mb-5">
           <h1 class="position-absolute top-0 start-50 translate-middle-x" style="font-family: Modestic;">Horários</h1>
-          <div>
-            <!--
-              <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Pesquisar" aria-label="Search">
-                <button style="border-color: white;" class="btn btn-outline-primary" type="submit">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-search" viewBox="0 0 16 18">
-                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                    </svg>
-                </button>
-            </form>-->
-          </div>
           <div class="position-absolute top-0 end-0">
               <button type="button" class="btn" data-bs-toggle="modal" data-bs-target="#create_hour"><svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="blue" class="bi bi-plus-square-fill" viewBox="0 0 16 16">
                   <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
               </svg></button>
           </div>
       </div>    
+      <div class="d-flex justify-content-center">
+        <div style="width: 50%; ">
+            <form class="d-flex" method="get" action="{% url 'all_hours' %}" role="search">
+                <input class="form-control me-2" type="search" name="search" value="{{ search_query }}" placeholder="Pesquisar" aria-label="Search">
+                <button style="border-color: #045CAC;" class="btn btn-green btn-outline-success" type="submit">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="white" class="bi bi-search" viewBox="0 0 16 18">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                    </svg>
+                </button>
+            </form>
+        </div>  
+    </div>
       <div class="container mt-4">
           <div>
               <div class="row align-items-center">
@@ -72,26 +77,23 @@
               </div>
           </div>    
       </div>
-      <div class="pagination">
-        <span class="step-links">
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center">
             {% if hours.has_previous %}
-                <a href="?page=1">&laquo; primeira</a>
-                <a href="?page={{ hours.previous_page_number }}">anterior</a>
+                <li class="page-item"><a class="page-link" href="?page={{ hours.previous_page_number }}">Anterior</a></li>
+                <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
             {% endif %}
-
-            <span class="current">
-                Página {{ hours.number }} de {{ hours.paginator.num_pages }}.
-            </span>
-
+            <li class="page-item active"><a class="page-link" href="#">{{ hours.number }}</a></li>
             {% if hours.has_next %}
-                <a href="?page={{ hours.next_page_number }}">próxima</a>
-                <a href="?page={{ hours.paginator.num_pages }}">última &raquo;</a>
+                <li class="page-item"><a class="page-link" href="?page={{ hours.paginator.num_pages }}">{{ hours.paginator.num_pages }}</a></li>
+                <li class="page-item"><a class="page-link" href="?page={{ hours.next_page_number }}">Próxima</a></li>
             {% endif %}
-        </span>
-    </div>
+        </ul>
+    </nav>
+    {% include 'reservations/partials/_create_hour_modal.html' %}
   </section>
 
-  {% include 'reservations/partials/_create_hour_modal.html' %}
+ 
 <script>
   document.addEventListener("DOMContentLoaded", function() {
     var editButtons = document.querySelectorAll('.edit-hour-btn');

@@ -26,8 +26,8 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Reserva de {self.teacher} para {self.room} às {self.hour} em {self.date}"
     
-    def get_teacher_username(self):
-        return self.teacher.username
+    def get_teacher_name(self):
+        return self.teacher.first_name
     
 
 class ReservationApproval(models.Model):

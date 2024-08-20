@@ -1,6 +1,8 @@
 from reservations.models import Hour
 from reservations.models import Reservation
 from reservations.models import ReservationApproval
+from datetime import datetime
+from django.db.models import Q
 
 class ReservationApprovalRepository:
     @staticmethod
@@ -13,6 +15,14 @@ class ReservationApprovalRepository:
         """Retorna uma aprovação de reserva pelo ID."""
         try:
             return ReservationApproval.objects.get(id=approval_id)
+        except ReservationApproval.DoesNotExist:
+            return None
+
+    @staticmethod
+    def get_approval_by_reservation(reservation_id):
+        """Retorna uma aprovação de reserva pelo ID da reserva."""
+        try:
+            return ReservationApproval.objects.get(reservation_id=reservation_id)
         except ReservationApproval.DoesNotExist:
             return None
 
@@ -108,27 +118,65 @@ class ReservationRepository:
         """
         Realiza a busca de reservas com base em um critério genérico:
         - Se o valor é numérico, busca por ID.
-        - Se o valor é uma data, busca por data.
-        - Se o valor é uma string, busca pelo nome da sala.
+        - Se o valor é uma data no formato DD/MM/YYYY, converte para YYYY-MM-DD e busca por data.
+        - Se o valor é uma string, converte para maiúsculas e busca pelo nome da sala.
 
         :param search_query: Valor inserido pelo usuário no campo de busca.
         :return: Queryset com as reservas encontradas.
         """
+        
+
         reservations = Reservation.objects.all()
 
         # Verifica se o valor é numérico e busca por ID
         if search_query.isdigit():
             reservations = reservations.filter(id=search_query)
-        
-        # Verifica se o valor é uma data válida e busca por data
-        elif ReservationRepository.is_valid_date(search_query):
-            reservations = reservations.filter(date=search_query)
-        
-        # Caso contrário, considera como nome da sala
+
         else:
-            reservations = reservations.filter(room__name__icontains=search_query)
-        
+            # Tenta converter a data do formato DD/MM/YYYY para YYYY-MM-DD
+            try:
+                search_query_as_date = datetime.strptime(search_query, '%d/%m/%Y').strftime('%Y-%m-%d')
+                reservations = reservations.filter(date=search_query_as_date)
+            except ValueError:
+                # Se não for uma data, considera como nome da sala
+                reservations = reservations.filter(room__name__icontains=search_query.upper())
+
         return reservations
+
+    
+    @staticmethod
+    def search_user_reservations(user_id, query):
+        """
+        Realiza a busca de reservas do usuário com base em diferentes critérios.
+        
+        :param user_id: ID do usuário.
+        :param query: Termo de busca.
+        :return: Queryset com as reservas encontradas.
+        """
+        # Verifica se a query é numérica para buscar por ID ou hora
+        if query.isdigit():
+            return Reservation.objects.filter(
+                Q(id=query) |
+                Q(hour__range_hour=query),
+                teacher_id=user_id
+            )
+        
+        # Verifica se a query é uma data no formato DD/MM/YYYY
+        elif ReservationRepository.is_valid_date(query):
+            # Converte a data para o formato do banco
+            query_date = ReservationRepository.format_date(query)
+            return Reservation.objects.filter(date=query_date, teacher_id=user_id)
+        
+        # Se for texto, pode ser nome da sala ou status
+        else:
+            query = query.strip().lower()
+            translated_status = ReservationRepository.translate_status(query)
+            return Reservation.objects.filter(
+                Q(room__name__icontains=query.upper()) |
+                Q(status=translated_status),
+                teacher_id=user_id
+            )
+
 
     @staticmethod
     def is_valid_date(date_string):
@@ -138,7 +186,6 @@ class ReservationRepository:
         :param date_string: String a ser verificada.
         :return: Boolean indicando se a string é uma data válida.
         """
-        from datetime import datetime
         try:
             datetime.strptime(date_string, '%Y-%m-%d')
             return True
@@ -146,6 +193,34 @@ class ReservationRepository:
             return False
         
     
+
+    @staticmethod
+    def translate_status(status):
+        """
+        Converte o status de português para inglês.
+
+        :param status: Status em português.
+        :return: Status correspondente em inglês.
+        """
+        status_translation = {
+            'pendente': 'pending',
+            'aprovado': 'approved',
+            'cancelado': 'cancelled',
+            'rejeitado': 'rejected'
+        }
+        return status_translation.get(status, status)  # Retorna o status em inglês ou o próprio status se não encontrado
+
+    @staticmethod
+    def format_date(date_string):
+        """
+        Formata uma data do formato DD/MM/YYYY para YYYY-MM-DD.
+
+        :param date_string: Data no formato DD/MM/YYYY.
+        :return: Data no formato YYYY-MM-DD.
+        """
+        date_obj = datetime.strptime(date_string, '%d/%m/%Y')
+        return date_obj.strftime('%Y-%m-%d')
+
     @staticmethod
     def get_reservations_with_approvals():
         """
@@ -212,3 +287,14 @@ class HourRepository:
             return Hour.objects.get(range_hour=range_hour)
         except Hour.DoesNotExist:
             return None
+        
+    @staticmethod
+    def search_hours(query):
+        """Busca horários por ID ou por intervalo de horas (range_hour)."""
+        if query.isdigit():
+            # Se o query for numérico, busca por ID
+            return Hour.objects.filter(id=query)
+        else:
+            # Se não for numérico, busca por range_hour (intervalo de horas)
+            query = query.strip()
+            return Hour.objects.filter(range_hour__icontains=query)

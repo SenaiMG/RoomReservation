@@ -15,6 +15,11 @@
             padding: 15px;
             text-align: center;
         }
+        .btn-green{
+        background-color: #045CAC;
+        
+      }
+
         @font-face {
             font-family: Modestic;
             src: url("{% static 'assets/fonts/modestic_sans/ModesticSans-Bold.ttf' %}") format(truetype);
@@ -31,7 +36,7 @@
                     <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0"/>
                 </svg></a>
             </div>
-        </div>     
+        </div>    
         <div class="container">
             {% for reserva in reservas %}    
             <div class="card p-3 mb-3 border-2">
@@ -40,7 +45,7 @@
                         <h5 class="card-title">{{reserva.room}}</h5>    
                     </div>    
                     <div class="col">
-                        <h5 class="text-end">{{reserva.get_teacher_username}}</h5>
+                        <h5 class="text-end">{{reserva.get_teacher_name}}</h5>
                     </div>
                 </div>    
                 <p class="f text-start mt-1" style="font-size: 15px; color: dimgray;">Data: {{reserva.date}} | {{reserva.hour}}</p>
@@ -56,23 +61,19 @@
                 </div>    
             </div>
             {% endfor %}
-            <div class="pagination">
-                <span class="step-links">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination d-flex justify-content-center">
                     {% if reservas.has_previous %}
-                        <a href="?page=1">&laquo; primeira</a>
-                        <a href="?page={{ reservas.previous_page_number }}">anterior</a>
+                        <li class="page-item"><a class="page-link" href="?page={{ reservas.previous_page_number }}">Anterior</a></li>
+                        <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
                     {% endif %}
-        
-                    <span class="current">
-                        Página {{ reservas.number }} de {{ reservas.paginator.num_pages }}.
-                    </span>
-        
+                    <li class="page-item active"><a class="page-link" href="#">{{ reservas.number }}</a></li>
                     {% if reservas.has_next %}
-                        <a href="?page={{ reservas.next_page_number }}">próxima</a>
-                        <a href="?page={{ reservas.paginator.num_pages }}">última &raquo;</a>
+                        <li class="page-item"><a class="page-link" href="?page={{ reservas.paginator.num_pages }}">{{ reservas.paginator.num_pages }}</a></li>
+                        <li class="page-item"><a class="page-link" href="?page={{ reservas.next_page_number }}">Próxima</a></li>
                     {% endif %}
-                </span>
-            </div>
+                </ul>
+            </nav>
         </div>    
     </section>
     <script>

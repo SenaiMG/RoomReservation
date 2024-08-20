@@ -5,9 +5,10 @@
         "pk": 1,
         "fields":{
             "username": "Docente" ,
-            "password": "pbkdf2_sha256$870000$opKrGAcEpVHoSrYXgvdnXX$ts0EnpiBC29/fwg2ImlQzVA/pqX3i/zxgK19iM5zUX0=",
+            "first_name": "Usuario Docente",
+            "password": "pbkdf2_sha256$870000$tnCKCMqxKGmwrbaBPrCLq0$zHqF1zokpXCqKf6kKg7i82Q5oyU6TMbdWGKINq1OSBo=",
             "user_type": "teacher",
-            "email": "docentesenai1234@gmail.com"
+            "email": "docentesenai@gmail.com"
         }
     },
     {
@@ -16,9 +17,10 @@
         "pk": 2,
         "fields":{
             "username": "Gestor" ,
-            "password": "pbkdf2_sha256$870000$GpZb8wbk2Ky3rHdo0hEPa9$vX33B3iwbRBA/Q7BATAE+gpLe3wPYTnQXuQiQ/6v/xU=",
+            "first_name": "Usuario Gestor",
+            "password": "pbkdf2_sha256$870000$WDLVFTLPnVgZaeCHy6pc8G$4z78hb83yBAlXKad4Y6rOtn8P+GrXB4re8HzotUdWs8=",
             "user_type": "manager",
-            "email": "gestorsenai1234@gmail.com"
+            "email": "gestorsenai@gmail.com"
         }
     }
 ]

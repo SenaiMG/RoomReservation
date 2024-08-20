@@ -1,4 +1,6 @@
 from users.models import User
+from django.db import models
+
 
 class UserRepository:
     @staticmethod
@@ -43,3 +45,16 @@ class UserRepository:
             user.delete()
             return True
         return False
+    
+    @staticmethod
+    def search_users(search_query):
+        """
+        Realiza a busca de usuários pelo first_name ou email.
+
+        :param search_query: Termo de busca.
+        :return: Queryset de usuários encontrados.
+        """
+        return User.objects.filter(
+            models.Q(first_name__icontains=search_query) | 
+            models.Q(email__icontains=search_query)
+        )

@@ -1,114 +1,115 @@
 [
+   
     {
         "model": "reservations.hour", 
         "pk": 1,
-        "fields":{
-            "range_hour": "06:00 - 07:00" 
-        }
-    },
-    {
-        "model": "reservations.hour", 
-        "pk": 2,
         "fields":{
             "range_hour": "07:01 - 08:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 3,
+        "pk": 2,
         "fields":{
             "range_hour": "08:01 - 09:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 4,
+        "pk": 3,
         "fields":{
             "range_hour": "09:01 - 10:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 5,
+        "pk": 4,
         "fields":{
             "range_hour": "10:01 - 11:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 6,
+        "pk": 5,
         "fields":{
-            "range_hour": "11:01 - 12:60" 
+            "range_hour": "11:01 - 12:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 7,
+        "pk": 6,
         "fields":{
             "range_hour": "12:01 - 13:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 8,
+        "pk": 7,
         "fields":{
             "range_hour": "13:01 - 14:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 9,
+        "pk": 8,
         "fields":{
             "range_hour": "14:01 - 15:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 10,
+        "pk": 9,
         "fields":{
             "range_hour": "15:01 - 16:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 11,
+        "pk": 10,
         "fields":{
             "range_hour": "16:01 - 17:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 12,
+        "pk": 11,
         "fields":{
             "range_hour": "17:01 - 18:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 13,
+        "pk": 12,
         "fields":{
             "range_hour": "18:01 - 19:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 14,
+        "pk": 13,
         "fields":{
             "range_hour": "19:01 - 20:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 15,
+        "pk": 14,
         "fields":{
             "range_hour": "20:01 - 21:00" 
         }
     },
     {
         "model": "reservations.hour", 
-        "pk": 16,
+        "pk": 15,
         "fields":{
             "range_hour": "21:01 - 22:00" 
+        }
+    },
+    {
+        "model": "reservations.hour", 
+        "pk": 16,
+        "fields":{
+            "range_hour": "22:01 - 23:00" 
         }
     }
 ]

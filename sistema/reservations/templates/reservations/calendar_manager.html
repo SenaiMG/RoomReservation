@@ -25,22 +25,23 @@
           <h1 style="font-family: Modestic; text-align: center;" >Calendário</h1>
       </div>
       <div>
-          <div class="d-flex justify-content-center">
-              <select class="form-select" id="list_room" style="width: 50%;" aria-label="Default select example" onchange="mostardivprof();">
-                  <option selected>Selecione sua sala</option>
-                  {% for rom in rooms %}
-                      <option value="{{ rom.id }}">{{ rom.name }}</option>
-                  {% endfor %}
-              </select>
+          <div class="d-flex justify-content-center pt-3">
+            <select class="form-select" id="list_teacher" style="width: 50%;" aria-label="Default select example" onchange="mostardivprof();">
+                <option selected>Selecione um professor</option>
+                {% for user in users %}
+                    <option value="{{ user.id }}">{{ user.first_name }}</option>
+                {% endfor %}
+            </select>
           </div>
-          <div class="d-flex justify-content-center pt-3" style="visibility: hidden;" id="prof">
-              <select class="form-select" id="list_teacher" style="width: 50%;" aria-label="Default select example" onchange="mostardiv();">
-                  <option selected>Selecione um professor</option>
-                  {% for user in users %}
-                      <option value="{{ user.id }}">{{ user.username }}</option>
-                  {% endfor %}
-              </select>
-          </div>
+          <br>
+            <div class="d-flex justify-content-center" style="visibility: hidden;" id="prof">
+                <select class="form-select" id="list_room" style="width: 50%;" aria-label="Default select example" onchange="mostardiv();">
+                    <option selected>Selecione sua sala</option>
+                    {% for rom in rooms %}
+                        <option value="{{ rom.id }}">{{ rom.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
           <div class="row" style="visibility: hidden;" id="calen">
               <div class="col-md-12">
                 <div class="content w-100">
