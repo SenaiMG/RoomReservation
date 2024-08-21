@@ -10,6 +10,7 @@ from users.decorators import *
 from rooms.service import RoomService
 from datetime import datetime
 from reservations.forms import HourForm
+from notifications.service import EmailService
 
 @method_decorator(user_is_teacher, name='dispatch')
 class CalendarReservation(View):
@@ -92,9 +93,19 @@ class ManageSolicitationView(View):
         # Verifica a ação e atualiza o status
         if action == 'approved':
             ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'approved')
+            EmailService.send_html_email(
+                subject="Sua reserva está com novo status",
+                html_content="<h1>Reserva Aprovada</h1><p>Sua reserva para a sala "+ solicitation.get_room_name() +" foi confirmada.</p>",
+                recipient_list=[solicitation.get_teacher_email()]
+            )
             messages.success(request, "Solicitação aprovada com sucesso!")
         elif action == 'rejected':
             ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'rejected')
+            EmailService.send_html_email(
+                subject="Sua reserva está com novo status",
+                html_content="<h1>Reserva Rejeitada</h1><p>Sua reserva para a sala "+ solicitation.get_room_name() +" não foi aprovada. Contate seu gestor</p>",
+                recipient_list=[solicitation.get_teacher_email()]
+            )
             messages.success(request, "Solicitação rejeitada com sucesso!") 
         else:
             messages.error(request, "Ação inválida.")
