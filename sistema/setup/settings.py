@@ -155,7 +155,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')  # Host do servidor SMTP
 EMAIL_PORT = env('EMAIL_PORT') # Porta do servidor SMTP
 EMAIL_USE_TLS = env('EMAIL_USE_TLS', default=True) # Use TLS para encriptar a conexão

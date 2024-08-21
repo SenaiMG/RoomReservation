@@ -14,12 +14,12 @@ from notifications.service import EmailService
 
 @method_decorator(user_is_teacher, name='dispatch')
 class CalendarReservation(View):
-
+    
     def get(self, request, *args, **kwargs):
         rooms = RoomService.get_all_rooms()
-
+        
         return render(request, 'reservations/calendar_teacher.html', {'rooms': rooms})
-
+    
     def post(self, request, *args, **kwargs):
         room = request.POST.get('room')
         hours = request.POST.getlist('hours')  
@@ -32,10 +32,10 @@ class CalendarReservation(View):
         for hour in hours:
             hour = HourService.get_hour_id_by_range(hour)
             ReservationService.create_new_reservation(room, request.user, hour, date_american)
-
+        
         messages.success(request, "Reserva criada com sucesso!")
         return redirect('calendar')
-
+    
 
 @method_decorator(user_is_teacher, name='dispatch')
 class ListReservation(View):
@@ -70,22 +70,21 @@ class ListReservation(View):
 
 @method_decorator(user_is_manager, name='dispatch')
 class ListReservationPending(View):
-
+    
     def get(self, request, *args, **kwargs):
         reservas = ReservationService.list_pending_reservations_all(request.GET.get('page', 1),20)
-
+        
         return render(request, 'reservations/request_pending.html', {'reservas': reservas})
-
+    
 
 
 @method_decorator(user_is_manager, name='dispatch')
 class ManageSolicitationView(View):
-
+    
     def post(self, request, *args, **kwargs):
         solicitation_id = kwargs.get('id')
         action = request.POST.get('action')
-        email = ReservationService.get_reservation_details(solicitation_id)
-
+ 
         solicitation = ReservationService.get_reservation_details(solicitation_id)
         if solicitation is None:
             messages.error(request, "Solicitação não encontrada.")
@@ -94,11 +93,19 @@ class ManageSolicitationView(View):
         # Verifica a ação e atualiza o status
         if action == 'approved':
             ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'approved')
-            EmailService.send_text_email(subject="O status da sua reserva", message="Foi aprovado", recipient_list=[email.teacher.email], from_email=None)
-
+            EmailService.send_html_email(
+                subject="Sua reserva está com novo status",
+                html_content="<h1>Reserva Aprovada</h1><p>Sua reserva para a sala "+ solicitation.get_room_name() +" foi confirmada.</p>",
+                recipient_list=[solicitation.get_teacher_email()]
+            )
             messages.success(request, "Solicitação aprovada com sucesso!")
         elif action == 'rejected':
             ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'rejected')
+            EmailService.send_html_email(
+                subject="Sua reserva está com novo status",
+                html_content="<h1>Reserva Rejeitada</h1><p>Sua reserva para a sala "+ solicitation.get_room_name() +" não foi aprovada. Contate seu gestor</p>",
+                recipient_list=[solicitation.get_teacher_email()]
+            )
             messages.success(request, "Solicitação rejeitada com sucesso!") 
         else:
             messages.error(request, "Ação inválida.")
@@ -109,12 +116,12 @@ class ManageSolicitationView(View):
 
 @method_decorator(user_is_manager, name='dispatch')
 class CalendarManagerReservation(View):
-
+    
     def get(self, request, *args, **kwargs):
         rooms = RoomService.get_all_rooms()
         users = UserService.get_all_users()
         return render(request, 'reservations/calendar_manager.html', {'rooms': rooms, 'users': users})
-
+    
     def post(self, request, *args, **kwargs):
         room = request.POST.get('room')
         hours = request.POST.getlist('hours')  
@@ -129,7 +136,7 @@ class CalendarManagerReservation(View):
             hour = HourService.get_hour_id_by_range(hour)
             reservation = ReservationService.create_new_reservation(room, teacher, hour, date_american, 'approved')
             ReservationApprovalService.create_new_approval(reservation, manager=request.user, status='approved')
-
+        
         messages.success(request, "Reserva criada e aprovada com sucesso!")
         return redirect('calendar_manager')
 
@@ -149,7 +156,7 @@ class ListReservationManager(View):
     #    reservas = ReservationService.list_reservations_with_approvals(request.GET.get('page', 1),20)
     #    
     #    return render(request, self.template_name, {'reservas': reservas})
-
+    
     def get(self, request):
         search_query = request.GET.get('search', '')
         page = request.GET.get('page', 1)
@@ -168,7 +175,7 @@ class ListReservationManager(View):
         if reservation_id:
             manager = request.user  # Assumindo que o usuário logado é o manager
             result = ReservationService.cancel_reservation(reservation_id, manager)
-
+            
             if isinstance(result, dict) and 'error' in result:
                 # Adiciona uma mensagem de erro se algo deu errado
                 messages.error(request, result['error'])
@@ -228,3 +235,8 @@ class HourDeleteView(View):
         HourService.delete_hour(hours_id)
         messages.success(request, "Hora deletada com sucesso!")
         return redirect('all_hours')
+
+
+
+
+
