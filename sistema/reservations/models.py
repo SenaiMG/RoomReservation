@@ -29,6 +29,12 @@ class Reservation(models.Model):
     def get_teacher_name(self):
         return self.teacher.first_name
     
+    def get_teacher_email(self):
+        return self.teacher.email
+    
+    def get_room_name(self):
+        return self.room.name
+    
 
 class ReservationApproval(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)

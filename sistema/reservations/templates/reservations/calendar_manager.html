@@ -14,7 +14,11 @@
       font-family: Modestic;
       src: url("{% static 'assets/fonts/modestic_sans/ModesticSans-Bold.ttf' %}") format(truetype);
     }
-    
+    @media (max-width: 991.98px) {
+    .navbar-expand-lg > .container,
+    .navbar-expand-lg > .container-fluid {
+      padding-right: calc(var(--bs-gutter-x)* .5);
+      padding-left: calc(var(--bs-gutter-x)* .5); } }
   </style>
 {% endblock %}
 
@@ -42,7 +46,7 @@
                     {% endfor %}
                 </select>
             </div>
-          <div class="row" style="visibility: hidden;" id="calen">
+          <div class="row w-100" style="margin: auto; visibility: hidden;" id="calen">
               <div class="col-md-12">
                 <div class="content w-100">
                   <div class="calendar-container">

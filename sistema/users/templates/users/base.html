@@ -20,7 +20,7 @@
     {% endblock %}
     
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
     {% block nav %}
         {% if user.user_type == "manager" %}
             {% include 'users/partials/manager/_header.html' %}
