@@ -64,7 +64,7 @@ ROOT_URLCONF = 'setup.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -155,7 +155,7 @@ AUTHENTICATION_BACKENDS = [
 
 
 
-#EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = env('EMAIL_HOST')  # Host do servidor SMTP
 EMAIL_PORT = env('EMAIL_PORT') # Porta do servidor SMTP
 EMAIL_USE_TLS = env('EMAIL_USE_TLS', default=True) # Use TLS para encriptar a conexão
