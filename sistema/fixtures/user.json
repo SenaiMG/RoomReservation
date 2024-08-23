@@ -5,7 +5,7 @@
         "pk": 1,
         "fields":{
             "username": "Docente" ,
-            "first_name": "Usuario Docente",
+            "first_name": "Jose joaquim da silva",
             "password": "pbkdf2_sha256$870000$tnCKCMqxKGmwrbaBPrCLq0$zHqF1zokpXCqKf6kKg7i82Q5oyU6TMbdWGKINq1OSBo=",
             "user_type": "teacher",
             "email": "docentesenai@gmail.com"
@@ -17,7 +17,7 @@
         "pk": 2,
         "fields":{
             "username": "Gestor" ,
-            "first_name": "Usuario Gestor",
+            "first_name": "Elias Duarte de Oliveira",
             "password": "pbkdf2_sha256$870000$WDLVFTLPnVgZaeCHy6pc8G$4z78hb83yBAlXKad4Y6rOtn8P+GrXB4re8HzotUdWs8=",
             "user_type": "manager",
             "email": "gestorsenai@gmail.com"
