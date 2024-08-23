@@ -3,7 +3,6 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 class UserService:
     @staticmethod
-    @staticmethod
     def list_all_users(page=1, per_page=10):
         """
         Lista todos os usuários com paginação.
@@ -16,7 +15,7 @@ class UserService:
         paginator = Paginator(all_users, per_page)
 
         try:
-            users = paginator.page(page)
+            users = paginator.page(int(page))
         except PageNotAnInteger:
             users = paginator.page(1)
         except EmptyPage:
@@ -78,7 +77,7 @@ class UserService:
         paginator = Paginator(users, per_page)
 
         try:
-            paginated_users = paginator.page(page)
+            paginated_users = paginator.page(int(page))
         except PageNotAnInteger:
             paginated_users = paginator.page(1)
         except EmptyPage:
