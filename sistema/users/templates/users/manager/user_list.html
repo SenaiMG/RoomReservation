@@ -79,6 +79,19 @@
                 </div>
             </div>    
         </div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination d-flex justify-content-center">
+                {% if users.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ users.previous_page_number }}">Anterior</a></li>
+                    <li class="page-item"><a class="page-link" href="?page=1">1</a></li>
+                {% endif %}
+                <li class="page-item active"><a class="page-link" href="#">{{ users.number }}</a></li>
+                {% if users.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ users.paginator.num_pages }}">{{ users.paginator.num_pages }}</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ users.next_page_number }}">Próxima</a></li>
+                {% endif %}
+            </ul>
+        </nav>
     </section>
     <script>
         function confirmDelete() {

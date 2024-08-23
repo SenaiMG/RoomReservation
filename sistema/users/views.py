@@ -38,21 +38,20 @@ class CustomLoginView(View):
 
 
 @method_decorator(user_is_manager, name='dispatch')
-class UserListView(ListView):
+class UserListView(View):
     template_name = 'users/manager/user_list.html'
-    context_object_name = 'users'
     paginate_by = 10
 
-    def get_queryset(self):
-        search_query = self.request.GET.get('search', '')
-        page = self.request.GET.get('page', 1)
+    def get(self, request, *args, **kwargs):
+        search_query = request.GET.get('search', '')
+        page = request.GET.get('page', 1)
         
         if search_query:
             users = UserService.search_users(search_query, page=page, per_page=self.paginate_by)
         else:
             users = UserService.list_all_users(page=page, per_page=self.paginate_by)
-        
-        return users
+
+        return render(request, self.template_name, {'users': users, 'search_query': search_query})
 
 
 @method_decorator(user_is_manager, name='dispatch')
