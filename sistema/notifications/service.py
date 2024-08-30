@@ -82,3 +82,51 @@ class EmailService:
 
         email.send()
 
+
+
+
+
+
+"""
+Formas de enviar o email:
+from notifications.services import EmailService
+
+# Exemplo de envio de um email de texto simples
+EmailService.send_text_email(
+    subject="Sua reserva foi confirmada",
+    message="Sua reserva para a sala XYZ foi confirmada.",
+    recipient_list=["usuario@example.com"]
+)
+
+# Exemplo de envio de um email com corpo HTML
+EmailService.send_html_email(
+    subject="Sua reserva foi confirmada",
+    html_content="<h1>Reserva Confirmada</h1><p>Sua reserva para a sala XYZ foi confirmada.</p>",
+    recipient_list=["usuario@example.com"]
+)
+
+# Exemplo de envio de um email com anexo e corpo HTML
+EmailService.send_email_with_attachment(
+    subject="Documento Importante",
+    message="Veja o documento em anexo.",
+    recipient_list=["usuario@example.com"],
+    attachment_path="/caminho/para/anexo.pdf",
+    html_message="<p>Veja o documento em anexo.</p>"
+)
+
+
+#exemplo de envio com template html
+context = {
+    'user': user,
+    'room': room,
+    'reservation_date': reservation_date,
+    'time_slot': time_slot,
+}
+
+EmailService.send_html_email_with_template(
+    subject="Confirmação de Reserva",
+    template_name="emails/email_confirmacao_reserva.html",
+    context=context,
+    recipient_list=[user.email]
+)
+"""
