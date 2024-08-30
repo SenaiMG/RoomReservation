@@ -40,6 +40,8 @@ class ReservationApprovalService:
 
 
 class ReservationService:
+
+
     @staticmethod
     def list_all_reservations(page=1, per_page=10):
         """
@@ -102,6 +104,10 @@ class ReservationService:
 
             if reservation.status != 'pending':
                 return {"error": "Reserva não está em estado pendente."}
+                      
+            # Verifica se já existe uma reserva para a mesma sala, data e horário
+            if status == 'approved' and ReservationRepository.check_for_conflicting_reservation(reservation.room.id, reservation.date, reservation.hour.id):
+                return {"error": "Já existe uma reserva aprovada para essa sala na data e horário selecionados."}
 
             # Atualiza o status da reserva para 'approved'
             updated_reservation = ReservationService.update_existing_reservation(reservation_id, status=status)
@@ -112,7 +118,6 @@ class ReservationService:
             return updated_reservation
 
         except ValueError as e :
-            #print(e)
             return {"error": "Reserva não encontrada."}
 
     @staticmethod
