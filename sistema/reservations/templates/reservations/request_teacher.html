@@ -52,8 +52,10 @@
                             <span class="badge text-bg-success">Aprovado</span>
                           {% elif reserva.status == "rejected" %}
                             <span class="badge text-bg-danger">Rejeitado</span>
+                          {% elif reserva.status == "cancelled" %}
+                            <span class="badge text-bg-danger">Cancelado</span>
                           {% else %}
-                            <span class="badge text-bg-warning">Pendente</span>
+                            <span class="badge text-bg-secundary">Não Processado</span>
                           {% endif %}
                           {% if reserva.status == "pending" %}
                           <hr>
