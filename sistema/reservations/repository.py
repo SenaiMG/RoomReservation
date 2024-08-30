@@ -38,6 +38,24 @@ class ReservationApprovalRepository:
 
     
 class ReservationRepository:
+
+    @staticmethod
+    def check_for_conflicting_reservation(room, date, hour):
+        """
+        Verifica se já existe uma reserva para a mesma sala, data e horário.
+        
+        :param room: A sala a ser verificada.
+        :param date: A data da reserva.
+        :param hour: O horário da reserva.
+        :return: True se houver conflito, False caso contrário.
+        """
+        return Reservation.objects.filter(
+            room_id=room,
+            date=date,
+            hour_id=hour,
+            status='approved'  # Considera apenas reservas aprovadas
+        ).exists()
+
     @staticmethod
     def get_all_reservations():
         """Retorna todas as reservas."""

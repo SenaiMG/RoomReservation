@@ -92,18 +92,21 @@ class ManageSolicitationView(View):
 
         # Verifica a ação e atualiza o status
         if action == 'approved':
-            ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'approved')
+            result = ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'approved')
+            if isinstance(result, dict) and "error" in result:
+                messages.error(request, result["error"])
+                return redirect('requests_pending')
             EmailService.send_html_email(
                 subject="Sua reserva está com novo status",
-                html_content="<h1>Reserva Aprovada</h1><p>Sua reserva para a sala "+ solicitation.get_room_name() +" foi confirmada.</p>",
+                html_content=f"<h1>Reserva Aprovada</h1><p>Sua reserva para a sala {solicitation.get_room_name()} foi confirmada.</p>",
                 recipient_list=[solicitation.get_teacher_email()]
             )
             messages.success(request, "Solicitação aprovada com sucesso!")
         elif action == 'rejected':
-            ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'rejected')
+            result = ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'rejected')
             EmailService.send_html_email(
                 subject="Sua reserva está com novo status",
-                html_content="<h1>Reserva Rejeitada</h1><p>Sua reserva para a sala "+ solicitation.get_room_name() +" não foi aprovada. Contate seu gestor</p>",
+                html_content=f"<h1>Reserva Rejeitada</h1><p>Sua reserva para a sala {solicitation.get_room_name()} não foi aprovada. Contate seu gestor.</p>",
                 recipient_list=[solicitation.get_teacher_email()]
             )
             messages.success(request, "Solicitação rejeitada com sucesso!") 
@@ -112,7 +115,6 @@ class ManageSolicitationView(View):
             return redirect('requests_pending')  
 
         return redirect('requests_pending')
-
 
 @method_decorator(user_is_manager, name='dispatch')
 class CalendarManagerReservation(View):
