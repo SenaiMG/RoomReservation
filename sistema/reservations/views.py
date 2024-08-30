@@ -96,17 +96,35 @@ class ManageSolicitationView(View):
             if isinstance(result, dict) and "error" in result:
                 messages.error(request, result["error"])
                 return redirect('requests_pending')
-            EmailService.send_html_email(
-                subject="Sua reserva está com novo status",
-                html_content=f"<h1>Reserva Aprovada</h1><p>Sua reserva para a sala {solicitation.get_room_name()} foi confirmada.</p>",
+            
+            context = {
+                'sala': solicitation.get_room_name(),
+                'data': solicitation.date.strftime("%d/%m/%Y"),
+                'hora': solicitation.get_hour_range(),
+                'professor': solicitation.get_teacher_name(),
+                'status': 'Aprovada'
+            }
+            EmailService.send_html_email_with_template(
+                subject="Reserva de Ambientes SESI-SENAI",
+                template_name="notifications/reservation.html",
+                context=context,
                 recipient_list=[solicitation.get_teacher_email()]
             )
+           
             messages.success(request, "Solicitação aprovada com sucesso!")
         elif action == 'rejected':
             result = ReservationService.approved_or_rejected_reservation(solicitation.id, request.user, 'rejected')
-            EmailService.send_html_email(
-                subject="Sua reserva está com novo status",
-                html_content=f"<h1>Reserva Rejeitada</h1><p>Sua reserva para a sala {solicitation.get_room_name()} não foi aprovada. Contate seu gestor.</p>",
+            context = {
+                'sala': solicitation.get_room_name(),
+                'data': solicitation.date.strftime("%d/%m/%Y"),
+                'hora': solicitation.get_hour_range(),
+                'professor': solicitation.get_teacher_name(),
+                'status': 'Reprovada'
+            }
+            EmailService.send_html_email_with_template(
+                subject="Reserva de Ambientes SESI-SENAI",
+                template_name="notifications/reservation.html",
+                context=context,
                 recipient_list=[solicitation.get_teacher_email()]
             )
             messages.success(request, "Solicitação rejeitada com sucesso!") 

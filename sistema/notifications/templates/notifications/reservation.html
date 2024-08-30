@@ -1,0 +1,90 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificação de Reserva de Sala</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .header img {
+            max-width: 150px;
+        }
+        .content {
+            text-align: center;
+        }
+        .content p {
+            font-size: 16px;
+            line-height: 1.5;
+        }
+        .footer {
+            text-align: center;
+            padding-top: 20px;
+            font-size: 12px;
+            color: #777;
+        }
+        .button {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .button.primary {
+            background-color: #2e1bdb;
+        }
+        .button.reject {
+            background-color: #f44336;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <!-- Coloque a imagem do programa aqui -->
+            <img src="{% static 'assets/img/logo_P.png' %}" alt="Logo do Programa" width="200px" height="200px">
+        </div>
+        <div class="content">
+            <h1>Notificação de Reserva de Sala</h1>
+            <p>
+                Prezado(a) Docente, {{professor}}
+            </p>
+            <p>
+                Informamos que sua solicitação de reserva de sala {{sala}} foi <strong>{{status}}</strong>.
+            </p>
+            <p>
+                <span>Na data: {{data}}</span>
+                <span>Horário: {{hora}}</span>
+            </p>
+            <a href="142.93.57.91" class="button primary">
+                Ver Detalhes
+            </a>
+        </div>
+        <div class="footer">
+            <p>© 2024 RoomReservation SENAI. Todos os direitos reservados. <a href="www.sophialabs.com.br">SophiaLabs</a> development and ChronoLabs participation</p>
+        </div>
+    </div>
+</body>
+</html>

@@ -35,6 +35,8 @@ class Reservation(models.Model):
     def get_room_name(self):
         return self.room.name
     
+    def get_hour_range(self):
+        return self.hour.range_hour
 
 class ReservationApproval(models.Model):
     reservation = models.ForeignKey(Reservation, on_delete=models.CASCADE)
